@@ -31,7 +31,29 @@
         </CCol>
         <CCol lg="8" md="8">
           <CCard>
-            <CDataTable
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Product Name</th>
+                <th>Unit</th>
+                <th>Stock</th>
+                <th>Price</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="post in product" :key="post.id">
+                <td>{{ post.product_name }}</td>
+                <td>{{ post.unit }}</td>
+                <td>{{ post.stock }}</td>
+                <td>{{ post.price }}</td>
+                <td>
+                  <CBadge :color="'success'" @click="handleAddCart(item.id)" class="mr-2" style="cursor: pointer;">ADD PRODUCT</CBadge>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+            <!-- <CDataTable
               :hover="hover"
               :striped="striped"
               :border="border"
@@ -49,15 +71,12 @@
                   <CBadge :color="'danger'" @click="handleDelete(item.id)" style="cursor: pointer;">Delete</CBadge>
                 </td>
               </template>
-            </CDataTable>
+            </CDataTable> -->
           </CCard>
         </CCol>
       </CRow>
     </CContainer>
     <CCardBody>
-      <CButton color="primary" @click="handleAdd" class="mb-2">
-        Add Customer
-      </CButton>
       <CModal
         title="Add Customer"
         :show.sync="myModal"
@@ -376,13 +395,13 @@ export default {
       fetch("http://127.0.0.1:3333/api/v1/getAllProduct")
         .then(response => response.json())
         .then(data => {
+          console.log(data, 'Hello')
           this.product = data.data
         })
-
-      return this.product
     }
   },
   data () {
+    this.product()
     return {
       myModal: false,
       editModal: false,
@@ -396,16 +415,7 @@ export default {
         discountType: 'FIX',
         ktp: ''
       },
-      salesData: [
-        {
-          name: 'Hari',
-          kelas: 'WKWKW'
-        },
-        {
-          name: 'Kamid',
-          kelas: 'WKWKW'
-        }
-      ],
+      salesData: [],
       product: []
     }
   }
