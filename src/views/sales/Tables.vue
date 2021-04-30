@@ -6,7 +6,7 @@
           :items="getAllData()"
           fixed
           border
-          caption="Customer Table"
+          caption="Sales Table"
         />
       </CCol>
     </CRow>
@@ -22,7 +22,7 @@ export default {
   components: { CTableWrapper },
   data() {
     return {
-      customer: []
+      sales: []
     }
   },
   methods: {
@@ -38,13 +38,13 @@ export default {
     },
     getAllData () {
       let allData = []
-      fetch("http://127.0.0.1:3333/api/v1/getAllCustomer")
+      fetch("http://127.0.0.1:3333/api/v1/getAllItem")
         .then(response => response.json())
         .then(data => {
-          this.customer = data.data
+          this.sales = data.data
         })
       // console.log(this.product, "This Product")
-      return this.customer
+      return this.sales
       
       // return [['Sabun', 'PCS', 3, 12000, 'BLA' ]]
     },

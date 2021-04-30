@@ -248,7 +248,7 @@ export default {
     fields: {
       type: Array,
       default () {
-        return ['ktp', 'name', 'contact', 'email', 'address', 'discount', 'discount_type', 'action']
+        return ['product', 'qty', 'total_price', 'payment_amount', 'action']
       }
     },
     fields2: {
