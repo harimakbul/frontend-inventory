@@ -48,7 +48,7 @@
                 <td>{{ post.stock }}</td>
                 <td>{{ post.price }}</td>
                 <td>
-                  <CBadge :color="'success'" @click="handleAddCart(item.id)" class="mr-2" style="cursor: pointer;">ADD PRODUCT</CBadge>
+                  <CBadge :color="'success'" @click="handleAddCart(post)" class="mr-2" style="cursor: pointer;">ADD PRODUCT</CBadge>
                 </td>
               </tr>
             </tbody>
@@ -228,9 +228,9 @@
         :dark="dark"
         pagination
       >
-        <template #status="{item}">
+        <template #action="{item}">
           <td>
-            <CBadge :color="'success'" @click="handleEdit(item.id)" class="mr-2" style="cursor: pointer;">Edit</CBadge>
+            <CBadge :color="'success'" @click="handleEdit(item.id)" class="mr-2" style="cursor: pointer;">Update</CBadge>
             <CBadge :color="'danger'" @click="handleDelete(item.id)" style="cursor: pointer;">Delete</CBadge>
           </td>
         </template>
@@ -248,7 +248,7 @@ export default {
     fields: {
       type: Array,
       default () {
-        return ['product', 'qty', 'total_price', 'payment_amount', 'action']
+        return ['product', 'qty', 'total_price', 'action']
       }
     },
     fields2: {
@@ -311,7 +311,7 @@ export default {
       console.log(event, 'This Event')
     },
     handleDelete(id) {
-      fetch(`http://127.0.0.1:3333/api/v1/deleteCustomer/${id}`, {
+      fetch(`http://127.0.0.1:3333/api/v1/deleteItem/${id}`, {
         method: 'DELETE',
       })
       .then(response => response.json())
@@ -334,6 +334,25 @@ export default {
         discountType: 'FIX',
         ktp: ''
       }
+    },
+    handleAddCart(item) {
+      const formData = new FormData()
+      formData.append('transactionCodeSales', '001')
+      formData.append('product', item.product_name)
+      formData.append('qty', 1)
+      formData.append('totalPrice', item.price)
+
+      fetch('http://127.0.0.1:3333/api/v1/storeItem', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+      })
+      .catch(error => {
+        console.error(error)
+      })
     },
     handleEdit(id) {
       fetch(`http://127.0.0.1:3333/api/v1/getCustomer/${id}`, {
@@ -416,7 +435,7 @@ export default {
         ktp: ''
       },
       salesData: [],
-      product: []
+      product: [],
     }
   }
 }
