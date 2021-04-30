@@ -228,9 +228,18 @@
         :dark="dark"
         pagination
       >
+        <template #qty="{item}">
+          <td>
+            <CInput
+              placeholder="Enter discount"
+              v-model="qty"
+              type="number"
+            />
+          </td>
+        </template>
         <template #action="{item}">
           <td>
-            <CBadge :color="'success'" @click="handleEdit(item.id)" class="mr-2" style="cursor: pointer;">Update</CBadge>
+            <CBadge :color="'success'" @click="updateItem(item)" class="mr-2" style="cursor: pointer;">Update</CBadge>
             <CBadge :color="'danger'" @click="handleDelete(item.id)" style="cursor: pointer;">Delete</CBadge>
           </td>
         </template>
@@ -375,36 +384,20 @@ export default {
         console.error(error)
       })
     },
-    updateCustomer() {
-      const id = this.salesData.id
-      const files = event.target.files
+    updateItem(item) {
+      const id = item.id
+      const price = item.total_price / item.qty
       const formData = new FormData()
-      formData.append('name', this.salesData.name)
-      formData.append('contact', this.salesData.contact)
-      formData.append('email', this.salesData.email)
-      formData.append('address', this.salesData.address)
-      formData.append('discount', this.salesData.discount)
-      formData.append('discountType', this.salesData.discountType)
-      formData.append('ktp', this.salesData.ktp)
+      formData.append('qty', this.qty)
+      formData.append('price', price)
 
-      fetch(`http://127.0.0.1:3333/api/v1/updateCustomer/${id}`, {
+      fetch(`http://127.0.0.1:3333/api/v1/updateItem/${id}`, {
         method: 'PUT',
         body: formData
       })
       .then(response => response.json())
       .then(data => {
         console.log(data)
-        this.editModal = false
-        this.salesData = {
-          id: '',
-          name: '',
-          contact: '',
-          email: '',
-          address: '',
-          discount: 0,
-          discountType: 'FIX',
-          ktp: ''
-        }
       })
       .catch(error => {
         console.error(error)
@@ -436,6 +429,7 @@ export default {
       },
       salesData: [],
       product: [],
+      qty: 1
     }
   }
 }
